@@ -32,7 +32,7 @@ pipeline {
                     bat """
                         mvn sonar:sonar ^
                         -Dsonar.projectKey=AutomationProject ^
-                        -Dsonar.sources=src/main/java ^
+                        -Dsonar.sources=src/test/java ^
                         -Dsonar.tests=src/test/java ^
                         -Dsonar.java.binaries=target/classes ^
                         -Dsonar.java.test.binaries=target/test-classes ^
