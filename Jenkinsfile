@@ -1,39 +1,37 @@
 pipeline {
     agent any
-    
+
     environment {
-        SONAR_TOKEN = credentials('sonar-token') // Add your SonarQube token credentials
-        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-17' // Adjust the Java version if needed
+        SONAR_TOKEN = credentials('sonar-token') // SonarQube token
+        JAVA_HOME = 'C:\\Program Files\\Java\\jdk-17' // Path to Java JDK
         PATH = "${JAVA_HOME}\\bin;${env.PATH}"
     }
-    
+
     stages {
         stage('Checkout Code') {
             steps {
                 checkout scm
             }
         }
-        
+
         stage('Build with Maven') {
             steps {
                 bat 'mvn clean package'
             }
         }
-        
-        stage('Run Automation Tests with JaCoCo') {
+
+        stage('Run Tests and Generate Coverage Report') {
             steps {
-                bat """
-                    mvn test jacoco:report
-                """
+                bat 'mvn test jacoco:report'
             }
         }
-        
+
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') { // Adjust 'sonarqube' to match your SonarQube server name in Jenkins
+                withSonarQubeEnv('sonarqube') { // Ensure this matches your SonarQube server in Jenkins
                     bat """
                         mvn sonar:sonar ^
-                        -Dsonar.projectKey=mern_2 ^
+                        -Dsonar.projectKey=AutomationProject ^
                         -Dsonar.sources=src/main/java ^
                         -Dsonar.tests=src/test/java ^
                         -Dsonar.java.binaries=target/classes ^
@@ -47,7 +45,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         success {
             echo 'Pipeline completed successfully!'
