@@ -31,12 +31,14 @@ pipeline {
                 withSonarQubeEnv('sonarqube') {
                     bat """
                         mvn sonar:sonar ^
-                        -Dsonar.projectKey=mern ^
+                        -Dsonar.projectKey=mern_2 ^
                         -Dsonar.tests=src/test/java ^
                         -Dsonar.java.binaries=target/classes ^
                         -Dsonar.java.test.binaries=target/test-classes ^
                         -Dsonar.host.url=http://localhost:9000 ^
                         -Dsonar.login=%SONAR_TOKEN%
+                        -Dsonar.java.coveragePlugin=jacoco ^
+                        -Dsonar.jacoco.reportPath=target/jacoco.exec
                     """
                 }
             }
